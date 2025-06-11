@@ -2,7 +2,7 @@
   "name": "smartcloud-scm",
   "version": "0.1.0",
   "private": true,
-// 这是正确的格式
+
 "scripts": {
   "dev": "next dev",
   "build": "prisma generate && next build",
