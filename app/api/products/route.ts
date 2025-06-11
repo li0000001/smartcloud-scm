@@ -34,7 +34,8 @@ export async function POST(request: Request) {
         return NextResponse.json(product);
     } catch (error: unknown) {
         // 处理 sku 唯一性冲突的错误
-        if (error.code === 'P2002') {
+        if (typeof error === 'object' && error !== null && 'console.error("PRODUCT_POST_ERROR", error);
+return new NextResponse("服务器内部错误", { statuscode' in error && (error as { code: unknown }).code === 'P2002') {
             return new NextResponse("该SKU已存在，请使用其他SKU", { status: 409 });
         }
         console.error("PRODUCT_POST_ERROR", error);
