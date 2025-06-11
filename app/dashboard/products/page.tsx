@@ -6,7 +6,21 @@ import { useState, useEffect, FormEvent } from "react";
 import { Product } from "@prisma/client"; // 直接从 Prisma Client 导入类型
 
 // 定义表单数据类型
-type ProductFormData = Omit<Product, "id" | "createdAt" | "updatedAt" | "userId">;
+type ProductFormData = {
+    name: string;
+    sku: string;
+    barcode?: string | null; // 允许是 string, null, 或 undefined
+    unit: string;
+    price?: number | null; // 允许是 number, null, 或 undefined
+    cost?: number | null; // 允许是 number, null, 或 undefined
+};
+
+export default function ProductsPage() {
+    // ...
+    // useState 的初始值也要匹配这个新类型
+    const [formData, setFormData] = useState<ProductFormData>({
+        name: '', sku: '', unit: '个', price: 0, cost: 0, barcode: ''
+    });
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);

@@ -1,30 +1,25 @@
-// 文件路径: app/api/products/route.ts (用于 POST 和 GET)
+// 文件路径: app/api/products/route.ts
 
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserFromSession } from "@/lib/auth"; // 我们需要一个新的工具函数来获取用户信息
+import { getUserFromSession } from "@/lib/auth";
 
-// 处理 POST 请求 - 新增商品
-// 文件路径: app/api/products/route.ts
-
-// ... (文件顶部的其他 import 语句保持不变)
-
-// 在文件顶部，或者函数外部，定义一个类型来描述 Prisma 的错误结构
-type PrismaError = {
-  code?: string;
+// 定义一个类型来描述 Prisma 错误中可能包含 code 的结构
+type PrismaErrorWithCode = {
+    code?: string;
 };
 
 // 创建一个类型谓词函数，用于检查错误是否是我们想要的特定类型
-function isPrismaP2002Error(error: unknown): error is PrismaError & { code: 'P2002' } {
+function isPrismaP2002Error(error: unknown): error is PrismaErrorWithCode {
   return (
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
-    (error as PrismaError).code === 'P2002'
+    (error as PrismaErrorWithCode).code === 'P2002'
   );
 }
 
-// --- 这是你要替换的整个 POST 函数 ---
+// --- 处理 POST 请求 - 新增商品 ---
 export async function POST(request: Request) {
     const user = await getUserFromSession();
     if (!user) {
@@ -64,3 +59,28 @@ export async function POST(request: Request) {
     }
 }
 
+
+// --- 处理 GET 请求 - 获取商品列表 ---
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: Request) {
+    const user = await getUserFromSession();
+    if (!user) {
+        return new NextResponse("未授权访问", { status: 401 });
+    }
+
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                userId: user.id,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            }
+        });
+
+        return NextResponse.json(products);
+    } catch (error) {
+        console.error("PRODUCT_GET_ERROR", error);
+        return new NextResponse("服务器内部错误", { status: 500 });
+    }
+}
