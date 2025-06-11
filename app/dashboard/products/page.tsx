@@ -26,7 +26,7 @@ export default function ProductsPage() {
             if (!res.ok) throw new Error("Failed to fetch products");
             const data = await res.json();
             setProducts(data);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError(err.message);
         } finally {
             setIsLoading(false);
@@ -55,7 +55,7 @@ export default function ProductsPage() {
 
             setIsModalOpen(false); // 关闭弹窗
             fetchProducts(); // 重新获取列表
-        } catch (err: any) {
+        } catch (err: unknown) {
             alert(`Error: ${err.message}`);
         }
     };

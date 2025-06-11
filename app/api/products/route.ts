@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json(product);
-    } catch (error: any) {
+    } catch (error: unknown) {
         // 处理 sku 唯一性冲突的错误
         if (error.code === 'P2002') {
             return new NextResponse("该SKU已存在，请使用其他SKU", { status: 409 });
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 }
 
 // 处理 GET 请求 - 获取商品列表
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
     const user = await getUserFromSession();
     if (!user) {
         return new NextResponse("未授权访问", { status: 401 });

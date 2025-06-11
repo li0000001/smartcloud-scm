@@ -28,7 +28,7 @@ export async function getUserFromSession() {
         });
 
         return user;
-    } catch (error) {
+    } catch (_) {
         return null;
     }
 }
