@@ -32,15 +32,16 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json(product);
-    } catch (error: unknown) {
-        // 处理 sku 唯一性冲突的错误
-        if (typeof error === 'object' && error !== null && 'console.error("PRODUCT_POST_ERROR", error);
-return new NextResponse("服务器内部错误", { statuscode' in error && (error as { code: unknown }).code === 'P2002') {
-            return new NextResponse("该SKU已存在，请使用其他SKU", { status: 409 });
-        }
-        console.error("PRODUCT_POST_ERROR", error);
-        return new NextResponse("服务器内部错误", { status: 500 });
+    } catch (error) { // 使用 catch(error)，让 TypeScript 自动推断
+    // 检查错误是否是 Prisma 的唯一约束冲突错误 (P2002)
+    if (error instanceof Error && 'code' in error && (error as any).code === 'P2002') {
+        return new NextResponse("该SKU已存在，请使用其他SKU", { status: 409 });
     }
+    
+    // 如果不是我们预期的特定错误，就按通用方式处理
+    console.error("PRODUCT_POST_ERROR", error);
+    return new NextResponse("服务器内部错误", { status: 500 });
+}
 }
 
 // 处理 GET 请求 - 获取商品列表
