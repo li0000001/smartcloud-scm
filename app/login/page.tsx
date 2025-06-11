@@ -1,4 +1,4 @@
-// 文件路径: app/login/page.tsx
+
 
 "use client";
 
@@ -31,6 +31,7 @@ export default function LoginPage() {
       } else {
         setError("邮箱或密码错误，请重试。");
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_) {
       setError("网络错误，请检查您的连接。");
     }
