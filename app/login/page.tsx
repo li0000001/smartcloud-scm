@@ -31,7 +31,7 @@ export default function LoginPage() {
       } else {
         setError("邮箱或密码错误，请重试。");
       }
-    } catch (err) {
+    } catch (_) {
       setError("网络错误，请检查您的连接。");
     }
   };
