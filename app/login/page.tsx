@@ -47,14 +47,14 @@ export default function LoginPage() {
           <div>
             <label htmlFor="email" className="text-sm font-medium text-gray-700">邮箱地址</label>
             <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900" />
           </div>
           <div>
             <label htmlFor="password" className="text-sm font-medium text-gray-700">密码</label>
             <input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900" />
           </div>
-          {error && <p className="text-sm text-center text-red-600">{error}</p>}
+{error && <p className="text-sm text-center text-red-600">{error}</p>}
           <div>
             <button type="submit"
               className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -62,7 +62,7 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
-        <p className="text-sm text-center text-gray-600">
+        <p className="text-sm text-center text-gray-600 text-gray-900">
           还没有账号？{" "}
           <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
             立即注册

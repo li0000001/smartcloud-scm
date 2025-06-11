@@ -16,4 +16,25 @@ model User {
   email          String   @unique
   hashedPassword String
   createdAt      DateTime @default(now())
+    products       Product[] // 添加这行：一个用户可以拥有多个商品
+}
+
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String   // 商品名称
+  sku         String   // 商品编码 (Stock Keeping Unit)，需要保证在同一个用户下是唯一的
+  barcode     String?  // 条形码 (可选)
+  unit        String   // 单位 (例如: 个, 件, 箱, kg)
+  price       Decimal? // 参考售价 (可选)
+  cost        Decimal? // 参考成本 (可选)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 建立商品与用户的关联关系
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 为同一个用户的 sku 添加唯一约束
+  @@unique([userId, sku])
 }
