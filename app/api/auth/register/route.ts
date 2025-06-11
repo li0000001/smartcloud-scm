@@ -2,10 +2,7 @@
 
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
-
-// 创建一个数据库连接的实例
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 // 定义一个处理 POST 请求的函数
 export async function POST(request: Request) {
