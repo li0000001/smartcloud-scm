@@ -43,6 +43,7 @@ export async function POST(request: Request) {
 }
 
 // 处理 GET 请求 - 获取商品列表
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(_request: Request) {
     const user = await getUserFromSession();
     if (!user) {
