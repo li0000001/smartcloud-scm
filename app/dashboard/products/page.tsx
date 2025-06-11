@@ -3,24 +3,17 @@
 "use client";
 
 import { useState, useEffect, FormEvent } from "react";
-import { Product } from "@prisma/client"; // 直接从 Prisma Client 导入类型
+import { Product } from "@prisma/client";
 
-// 定义表单数据类型
+// 明确定义前端表单的数据结构
 type ProductFormData = {
     name: string;
     sku: string;
-    barcode?: string | null; // 允许是 string, null, 或 undefined
+    barcode?: string | null;
     unit: string;
-    price?: number | null; // 允许是 number, null, 或 undefined
-    cost?: number | null; // 允许是 number, null, 或 undefined
+    price?: number | null;
+    cost?: number | null;
 };
-
-export default function ProductsPage() {
-    // ...
-    // useState 的初始值也要匹配这个新类型
-    const [formData, setFormData] = useState<ProductFormData>({
-        name: '', sku: '', unit: '个', price: 0, cost: 0, barcode: ''
-    });
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -28,7 +21,7 @@ export default function ProductsPage() {
     const [error, setError] = useState<string | null>(null);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [formData, setFormData] = useState<Partial<ProductFormData>>({
+    const [formData, setFormData] = useState<ProductFormData>({
         name: '', sku: '', unit: '个', price: 0, cost: 0, barcode: ''
     });
 
@@ -37,11 +30,15 @@ export default function ProductsPage() {
         setIsLoading(true);
         try {
             const res = await fetch("/api/products");
-            if (!res.ok) throw new Error("Failed to fetch products");
+            if (!res.ok) throw new Error("获取商品列表失败");
             const data = await res.json();
             setProducts(data);
-        } catch (err: unknown) {
-            setError(err.message);
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("发生未知错误");
+            }
         } finally {
             setIsLoading(false);
         }
@@ -64,13 +61,18 @@ export default function ProductsPage() {
 
             if (!res.ok) {
                 const errorData = await res.text();
-                throw new Error(errorData || "Failed to create product");
+                throw new Error(errorData || "创建商品失败");
             }
 
             setIsModalOpen(false); // 关闭弹窗
+            setFormData({ name: '', sku: '', unit: '个', price: 0, cost: 0, barcode: '' }); // 清空表单
             fetchProducts(); // 重新获取列表
-        } catch (err: unknown) {
-            alert(`Error: ${err.message}`);
+        } catch (err) {
+            if (err instanceof Error) {
+                alert(`错误: ${err.message}`);
+            } else {
+                alert(`发生未知错误: ${String(err)}`);
+            }
         }
     };
 
@@ -97,13 +99,13 @@ export default function ProductsPage() {
 
             {/* 商品列表 */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-                {isLoading && <p>Loading...</p>}
+                {isLoading && <p>正在加载...</p>}
                 {error && <p className="text-red-500">{error}</p>}
                 {!isLoading && !error && (
                     <table className="w-full text-left">
                         <thead>
                             <tr className="border-b">
-<th className="p-2 text-gray-900">商品名称</th>
+                                <th className="p-2 text-gray-900">商品名称</th>
                                 <th className="p-2 text-gray-900">SKU</th>
                                 <th className="p-2 text-gray-900">单位</th>
                                 <th className="p-2 text-gray-900">售价</th>
@@ -114,7 +116,7 @@ export default function ProductsPage() {
                             {products.length > 0 ? (
                                 products.map(product => (
                                     <tr key={product.id} className="border-b hover:bg-gray-50">
-<td className="p-2 text-gray-900">{product.name}</td>
+                                        <td className="p-2 text-gray-900">{product.name}</td>
                                         <td className="p-2 text-gray-900">{product.sku}</td>
                                         <td className="p-2 text-gray-900">{product.unit}</td>
                                         <td className="p-2 text-gray-900">{product.price?.toString() || 'N/A'}</td>
@@ -141,23 +143,23 @@ export default function ProductsPage() {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="text-gray-700">商品名称 *</label>
-                                <input type="text" name="name" required onChange={handleInputChange} className="w-full p-2 border rounded" />
+                                <input type="text" name="name" value={formData.name} required onChange={handleInputChange} className="w-full p-2 border rounded text-gray-900" />
                             </div>
                             <div>
                                 <label className="text-gray-700">SKU *</label>
-                                <input type="text" name="sku" required onChange={handleInputChange} className="w-full p-2 border rounded" />
+                                <input type="text" name="sku" value={formData.sku} required onChange={handleInputChange} className="w-full p-2 border rounded text-gray-900" />
                             </div>
                             <div>
                                 <label className="text-gray-700">单位 *</label>
-                                <input type="text" name="unit" required defaultValue="个" onChange={handleInputChange} className="w-full p-2 border rounded" />
+                                <input type="text" name="unit" value={formData.unit} required onChange={handleInputChange} className="w-full p-2 border rounded text-gray-900" />
                             </div>
                             <div>
                                 <label className="text-gray-700">售价</label>
-                                <input type="number" name="price" step="0.01" onChange={handleInputChange} className="w-full p-2 border rounded" />
+                                <input type="number" name="price" value={formData.price ?? ''} step="0.01" onChange={handleInputChange} className="w-full p-2 border rounded text-gray-900" />
                             </div>
                             <div>
                                 <label className="text-gray-700">成本</label>
-                                <input type="number" name="cost" step="0.01" onChange={handleInputChange} className="w-full p-2 border rounded" />
+                                <input type="number" name="cost" value={formData.cost ?? ''} step="0.01" onChange={handleInputChange} className="w-full p-2 border rounded text-gray-900" />
                             </div>
                             <div className="flex justify-end space-x-4">
                                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded">取消</button>
