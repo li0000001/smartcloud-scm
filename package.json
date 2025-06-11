@@ -2,12 +2,13 @@
   "name": "smartcloud-scm",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build"
-    "start": "next start",
-    "lint": "next lint"
-  },
+// 这是正确的格式
+"scripts": {
+  "dev": "next dev",
+  "build": "prisma generate && next build",
+  "start": "next start",
+  "lint": "next lint"
+},
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
